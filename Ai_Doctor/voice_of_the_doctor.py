@@ -34,43 +34,108 @@ def play_audio(file_path):
 
 
 def text_to_speech_with_gtts(input_text, output_filepath, autoplay=False):
-    print(" Generating speech with gTTS...", flush=True)
+    """Generate speech using Google Text-to-Speech (free fallback)"""
+    print("🔄 Generating speech with gTTS (Google TTS)...", flush=True)
     try:
+        # Validate input
+        if not input_text or input_text.strip() == "":
+            print("⚠️ WARNING: Empty text for gTTS", flush=True)
+            return None
+        
+        # Clean and truncate if needed
+        input_text = input_text.strip()
+        max_length = 5000
+        if len(input_text) > max_length:
+            input_text = input_text[:max_length] + "..."
+        
+        # Generate speech
         audioobj = gTTS(text=input_text, lang="en", slow=False)
-        print(f" Saving gTTS file to {output_filepath}...", flush=True)
+        print(f"💾 Saving gTTS audio to {output_filepath}...", flush=True)
         audioobj.save(output_filepath)
-        print(" gTTS Speech synthesis complete!", flush=True)
+        
+        # Verify file creation
+        if os.path.exists(output_filepath):
+            file_size = os.path.getsize(output_filepath) / 1024  # KB
+            print(f"✓ gTTS speech synthesis complete! ({file_size:.2f} KB)", flush=True)
+        else:
+            raise FileNotFoundError("gTTS audio file was not created")
+        
         if autoplay:
             play_audio(output_filepath)
+            
         return output_filepath
+        
     except Exception as e:
-        print(f" ERROR in gTTS: {e}", flush=True)
+        print(f"❌ ERROR in gTTS: {e}", flush=True)
+        print(f"   Error type: {e.__class__.__name__}", flush=True)
         return None
 
 
 def text_to_speech_with_elevenlabs(input_text, output_filepath, autoplay=False):
+    """Generate speech using ElevenLabs with gTTS fallback"""
     try:
-        print("🔍 Checking ElevenLabs API key...", flush=True)
+        # Validate input text
+        if not input_text or input_text.strip() == "":
+            print("⚠️ WARNING: Empty text provided for speech synthesis", flush=True)
+            return None
+        
+        # Clean the input text
+        input_text = input_text.strip()
+        
+        # Check for error messages in the text
+        if input_text.startswith("ERROR") or input_text.startswith("⚠️"):
+            print("ℹ️ Skipping voice synthesis for error message", flush=True)
+            # Still generate audio for errors, but with gTTS
+            return text_to_speech_with_gtts(input_text, output_filepath, autoplay)
+            
+        print("🔄 Checking ElevenLabs API key...", flush=True)
+        if not ELEVENLABS_API_KEY or ELEVENLABS_API_KEY.strip() == "":
+            print("⚠️ WARNING: ELEVENLABS_API_KEY not configured, using gTTS fallback", flush=True)
+            return text_to_speech_with_gtts(input_text, output_filepath, autoplay)
+            
+        # Initialize ElevenLabs client
         client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
-        print(" ElevenLabs API Key Loaded!", flush=True)
+        print("✓ ElevenLabs API Key validated", flush=True)
 
-        print("🎙️ Generating speech with ElevenLabs...", flush=True)
+        print("🔄 Generating speech with ElevenLabs...", flush=True)
+        
+        # Truncate text if too long (ElevenLabs has character limits)
+        max_length = 5000
+        original_length = len(input_text)
+        if original_length > max_length:
+            input_text = input_text[:max_length] + "..."
+            print(f"ℹ️ Text truncated from {original_length} to {max_length} characters", flush=True)
+        
+        # Generate audio with ElevenLabs
         audio = client.generate(
             text=input_text,
-            voice="Aria",
-            output_format="mp3_22050_32",
-            model="eleven_turbo_v2"
+            voice="Aria",  # Professional female voice
+            output_format="mp3_22050_32",  # Good quality, reasonable file size
+            model="eleven_turbo_v2"  # Fast and efficient
         )
 
-        print(f" Saving ElevenLabs audio to {output_filepath}...", flush=True)
+        print(f"💾 Saving ElevenLabs audio to {output_filepath}...", flush=True)
         elevenlabs.save(audio, filename=output_filepath)
-        print(" ElevenLabs Speech synthesis complete!", flush=True)
+        
+        # Verify file was created
+        if os.path.exists(output_filepath):
+            file_size = os.path.getsize(output_filepath) / 1024  # KB
+            print(f"✓ ElevenLabs speech synthesis complete! ({file_size:.2f} KB)", flush=True)
+        else:
+            raise FileNotFoundError("Audio file was not created")
+        
         if autoplay:
             play_audio(output_filepath)
+            
         return output_filepath
+        
     except Exception as e:
-        print(f" ERROR in ElevenLabs: {e}", flush=True)
-        return None
+        print(f"❌ ERROR in ElevenLabs: {e}", flush=True)
+        print(f"   Error type: {e.__class__.__name__}", flush=True)
+        
+        # Fallback to gTTS if ElevenLabs fails
+        print("🔄 Falling back to gTTS for voice synthesis...", flush=True)
+        return text_to_speech_with_gtts(input_text, output_filepath, autoplay)
 
 if __name__ == "__main__":
     input_text = "Hi, this is Utkarsh"

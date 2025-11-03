@@ -119,6 +119,10 @@ export default function Home() {
   const router = useRouter();
   const [hoveredFeature, setHoveredFeature] = useState<number | null>(null);
 
+  const handleGetStarted = () => {
+    router.push('/dashboard');
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
@@ -157,20 +161,20 @@ export default function Home() {
             >
               <Button
                 size="lg"
-                className="bg-[#2D336B] hover:bg-[#1E2245] text-white group"
-                onClick={() => router.push('/sign-in')}
+                className="bg-gradient-to-r from-[#2D336B] to-[#1E2245] hover:from-[#1E2245] hover:to-[#0F1122] text-white shadow-xl hover:shadow-2xl transition-all duration-300 group px-8 py-6 text-lg"
+                onClick={handleGetStarted}
               >
-                Start Free Trial
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                Get Started
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                className="border-[#A9B5DF] hover:border-[#7886C7] group"
+                className="border-2 border-[#A9B5DF] hover:border-[#2D336B] hover:bg-[#2D336B]/5 group px-8 py-6 text-lg transition-all duration-300"
                 onClick={() => router.push('/about')}
               >
                 Learn More
-                <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
             </motion.div>
           </motion.div>
@@ -210,20 +214,21 @@ export default function Home() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeIn}
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, y: -5 }}
                 onHoverStart={() => setHoveredFeature(index)}
                 onHoverEnd={() => setHoveredFeature(null)}
-                className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all"
+                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all duration-300 border border-transparent hover:border-[#A9B5DF]/30 relative overflow-hidden group"
               >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#2D336B]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <feature.icon 
-                  className={`h-12 w-12 mb-4 transition-colors duration-300 ${
-                    hoveredFeature === index ? 'text-[#2D336B]' : 'text-[#A9B5DF]'
+                  className={`h-14 w-14 mb-4 transition-all duration-300 relative z-10 ${
+                    hoveredFeature === index ? 'text-[#2D336B] scale-110' : 'text-[#A9B5DF]'
                   }`}
                 />
-                <h3 className="text-xl font-semibold text-[#2D336B] mb-2">
+                <h3 className="text-xl font-semibold text-[#2D336B] mb-3 relative z-10">
                   {feature.title}
                 </h3>
-                <p className="text-[#7886C7]">{feature.description}</p>
+                <p className="text-[#7886C7] leading-relaxed relative z-10">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -262,13 +267,16 @@ export default function Home() {
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeIn}
-                className="bg-[#1E2245] rounded-2xl p-6"
+                whileHover={{ scale: 1.03 }}
+                className="bg-[#1E2245] rounded-2xl p-8 hover:bg-[#262B52] transition-all duration-300 border border-[#A9B5DF]/20 hover:border-[#A9B5DF]/40 group"
               >
-                <capability.icon className="h-12 w-12 text-[#A9B5DF] mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <div className="bg-[#2D336B] rounded-lg p-3 inline-block mb-4 group-hover:bg-[#A9B5DF] transition-colors duration-300">
+                  <capability.icon className="h-10 w-10 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">
                   {capability.title}
                 </h3>
-                <p className="text-[#A9B5DF]">{capability.description}</p>
+                <p className="text-[#A9B5DF] leading-relaxed">{capability.description}</p>
               </motion.div>
             ))}
           </div>
@@ -319,11 +327,11 @@ export default function Home() {
           </p>
           <Button
             size="lg"
-            className="bg-[#2D336B] hover:bg-[#1E2245] text-white"
-            onClick={() => router.push('/contact')}
+            className="bg-gradient-to-r from-[#2D336B] to-[#1E2245] hover:from-[#1E2245] hover:to-[#0F1122] text-white shadow-xl hover:shadow-2xl transition-all duration-300 group px-8 py-6 text-lg"
+            onClick={handleGetStarted}
           >
-            Get Started Today
-            <ArrowRight className="ml-2 h-4 w-4" />
+            Get Started Now
+            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
         </motion.div>
       </section>

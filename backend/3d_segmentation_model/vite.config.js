@@ -4,11 +4,17 @@ export default defineConfig({
   root: '.',
   base: './',
   server: {
-    port: 3001,
+    port: 3003,
     open: false,
-    cors: true
+    cors: true,
+    host: '0.0.0.0'
   },
   preview: {
-    port : 8088
+    port: 3003,
+    host: '0.0.0.0'
+  },
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true
   }
 })

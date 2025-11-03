@@ -1,94 +1,135 @@
-# DashDash - AI Doctor Dashboard
+# DashDash - AI Doctor Dashboard with 3D Brain Segmentation
 
-This project integrates a Next.js frontend dashboard with a Gradio-based AI Doctor application and a 3D Brain Segmentation model.
+An advanced medical dashboard combining AI assistance, 3D brain visualization, and medical diagnosis tools.
 
 ## Project Structure
 
-- `frontend/` - Next.js frontend application with Clerk authentication
-- `Ai_Doctor/` - Python-based AI Doctor application using Gradio, Groq, and ElevenLabs
-- `backend/3d_segmentation_model/` - 3D Brain Segmentation model visualization
+- `frontend/` - Next.js web application with Clerk authentication
+- `backend/` - Python Flask API server
+  - `3d_segmentation_model/` - Browser-based 3D segmentation viewer
+- `Ai_Doctor/` - AI-powered medical assistant service using Gradio, Groq, and ElevenLabs
 
-## Setup Instructions
+## Prerequisites
 
-### Prerequisites
-
-- Node.js (v16+)
-- Python (v3.8+)
+- Node.js >= 18
+- Python >= 3.12
+- Docker and Docker Compose (recommended)
 - FFmpeg (for audio processing)
 
-### Environment Variables
+## Quick Start with Docker
 
-1. For the frontend (Next.js):
-   - Create a `.env.local` file in the `frontend/` directory with your Clerk API keys
-   
-2. For the AI Doctor (Python):
-   - Set up the `.env` file in the `Ai_Doctor/` directory with your Groq and ElevenLabs API keys
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rdxpt/dashdash.git
+   cd dashdash
+   ```
 
-## Running the Application
+2. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys and configuration
+   ```
 
-### Initial Setup
+3. Start all services:
+   ```bash
+   npm run dev
+   ```
 
-```bash
-# Install dependencies
-npm install
-cd frontend && npm install
-cd backend/3d_segmentation_model && npm install
-cd Ai_Doctor && pip install -r requirements.txt
-```
+The following services will be available:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+- AI Service: http://localhost:7860
+- 3D Model Viewer: http://localhost:3001
 
-### Option 1: Start All Servers at Once
+## Development Without Docker
 
-```bash
-# Start all servers
-npm start
-```
+1. Frontend:
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
-This will start:
-- Next.js frontend on http://localhost:3000 (should open automatically in browser)
-- 3D Segmentation Model on http://localhost:3001 (runs in background)
+2. Backend:
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+   pip install -r requirements.txt
+   flask run
+   ```
 
-### Option 2: Start Servers Individually
+3. AI Service:
+   ```bash
+   cd Ai_Doctor
+   python -m venv venv
+   source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+   pip install -r requirements.txt
+   python run_gradio_server.py
+   ```
 
-#### Start the Next.js Frontend
+4. 3D Model Viewer:
+   ```bash
+   cd backend/3d_segmentation_model
+   npm install
+   npm run dev
+   ```
 
-```bash
-npm run start:frontend
-```
+## Available Scripts
 
-#### Start the 3D Segmentation Model
+- `npm run dev` - Start all services with Docker Compose
+- `npm run dev:frontend` - Start only the frontend
+- `npm run dev:3d-model` - Start only the 3D model viewer
+- `npm run dev:ai` - Start only the AI service
+- `npm run build` - Build all services
+- `npm run test` - Run all tests
+- `npm run lint` - Run linting
+- `npm run clean` - Clean build artifacts and dependencies
 
-```bash
-npm run start:3d-model
-```
+## Environment Variables
 
-#### Start the Gradio Server
+The following environment variables need to be set in your `.env` file:
 
-```bash
-npm run start:gradio
-```
+1. Frontend (Next.js):
+   - `NEXT_PUBLIC_API_URL` - Backend API URL
+   - `NEXT_PUBLIC_AI_SERVICE_URL` - AI Service URL
+   - `NEXT_PUBLIC_3D_MODEL_URL` - 3D Model Viewer URL
+   - Clerk authentication keys
 
-### If the Browser Doesn't Open Automatically
+2. AI Doctor:
+   - `GROQ_API_KEY` - Your Groq API key
+   - `ELEVENLABS_API_KEY` - Your ElevenLabs API key
 
-If the browser doesn't open automatically, you can manually open it with:
-
-```bash
-npm run open-browser
-```
-
-Or simply navigate to http://localhost:3000 in your browser.
-
-## Accessing the Application
-
-1. The Next.js frontend should automatically open at `http://localhost:3000`
-2. Sign in using Clerk authentication
-3. Navigate to the dashboard to access:
-   - Patient Management
-   - AI Doctor (requires Gradio server running on port 7860)
-   - 3D Brain Segmentation (requires 3D model server running on port 3001)
+See `.env.example` for a complete list of required variables.
 
 ## Troubleshooting
 
-- If you encounter port conflicts, check that no other applications are using ports 3000, 3001, or 7860
+- If you encounter port conflicts, check that no other applications are using ports 3000, 3001, 5000, or 7860
 - For microphone issues with the AI Doctor, ensure your browser has permission to access the microphone
 - If FFmpeg is not installed, follow the installation instructions for your operating system
-- If the browser doesn't open automatically, run `npm run open-browser` or manually navigate to http://localhost:3000 
+- Docker issues:
+  - Ensure Docker and Docker Compose are installed and running
+  - Try `docker-compose down -v` to clean up volumes and restart
+
+## Contributing
+
+1. Create a new branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. Make your changes and commit:
+   ```bash
+   git commit -m "Description of changes"
+   ```
+
+3. Push to your branch:
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+4. Create a Pull Request
+
+## License
+
+MIT

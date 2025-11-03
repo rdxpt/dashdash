@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      target: development
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+      - ai-service
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=1
+
+  ai-service:
+    build:
+      context: ./Ai_Doctor
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./Ai_Doctor:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  3d-model:
+    build:
+      context: ./backend/3d_segmentation_model
+      target: development
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./backend/3d_segmentation_model:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development

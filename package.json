@@ -2,14 +2,27 @@
   "name": "dashdash",
   "version": "1.0.0",
   "description": "AI Doctor Dashboard with 3D Brain Segmentation",
-  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend/3d_segmentation_model"
+  ],
   "scripts": {
-    "prestart": "npm install open --no-save",
-    "start": "node start-servers.js",
-    "start:frontend": "npm install open --no-save && node frontend/start-frontend.js",
-    "start:3d-model": "cd backend/3d_segmentation_model && npm run dev",
-    "start:gradio": "cd Ai_Doctor && python run_gradio_server.py",
-    "open-browser": "npm install open --no-save && node open-browser.js"
+    "dev": "docker-compose up",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:3d-model": "cd backend/3d_segmentation_model && npm run dev",
+    "dev:ai": "cd Ai_Doctor && python run_gradio_server.py",
+    "build": "npm run build:frontend && npm run build:3d-model",
+    "build:frontend": "cd frontend && npm run build",
+    "build:3d-model": "cd backend/3d_segmentation_model && npm run build",
+    "test": "npm run test:frontend && npm run test:3d-model",
+    "test:frontend": "cd frontend && npm run test",
+    "test:3d-model": "cd backend/3d_segmentation_model && npm run test",
+    "lint": "npm run lint:frontend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "clean": "npm run clean:frontend && npm run clean:3d-model",
+    "clean:frontend": "rm -rf frontend/.next frontend/node_modules",
+    "clean:3d-model": "rm -rf backend/3d_segmentation_model/dist backend/3d_segmentation_model/node_modules"
   },
   "keywords": [
     "ai",
@@ -22,5 +35,9 @@
   "license": "MIT",
   "dependencies": {
     "open": "^8.4.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   }
 } 

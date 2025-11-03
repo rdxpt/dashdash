@@ -1,8 +1,19 @@
-gradio>=4.0.0
+# Core AI and API packages
+gradio>=5.0.0
 groq>=0.18.0
-pydub>=0.25.1
-pyaudio>=0.2.13
-SpeechRecognition>=3.10.0
-elevenlabs>=0.2.24
+elevenlabs>=1.0.0
 python-dotenv>=1.0.0
-gtts>=2.3.2
+
+# Audio processing
+pydub>=0.25.1
+SpeechRecognition>=3.10.0
+gtts>=2.5.0
+
+# Optional but recommended for audio recording
+# PyAudio>=0.2.13  # Uncomment if you need microphone recording in Python
+# Note: PyAudio can be tricky to install on Windows
+# If needed, download wheel from: https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio
+
+# Required by dependencies
+setuptools>=65.0.0
+wheel>=0.38.0

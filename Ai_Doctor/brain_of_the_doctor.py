@@ -24,7 +24,7 @@ def encode_image(image_path):
         return None
 
 
-def analyze_image_with_query(query, encoded_image, model="llama-3.2-90b-vision-preview"):
+def analyze_image_with_query(query, encoded_image, model="llama-3.2-11b-vision-preview"):
     try:
         print(" Initializing Groq client...")
         client = Groq(api_key=GROQ_API_KEY)  
@@ -43,12 +43,18 @@ def analyze_image_with_query(query, encoded_image, model="llama-3.2-90b-vision-p
         ]
 
         print(" Sending request to AI model...")
-        chat_completion = client.chat.completions.create(messages=messages, model=model)
+        chat_completion = client.chat.completions.create(
+            messages=messages, 
+            model=model, 
+            max_tokens=300,
+            temperature=0.7
+        )
 
         print(" AI response received!")
         return chat_completion.choices[0].message.content
 
     except Exception as e:
+        print(f" ERROR details: {e}")
         return f" ERROR: {e}"
 
 

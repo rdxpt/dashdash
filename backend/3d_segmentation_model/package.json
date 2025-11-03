@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3001 --no-open",
+    "dev": "vite --port 3003 --no-open",
     "build": "vite build",
-    "preview": "vite preview --port 3001 --no-open",
+    "preview": "vite preview --port 3003 --no-open",
     "test": "npx playwright test",
     "pretest": "vite build"
   },

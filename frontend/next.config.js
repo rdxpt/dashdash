@@ -5,7 +5,17 @@ const nextConfig = {
   },
   images: { unoptimized: true },
   experimental: {
-    serverActions: true,
+    serverActions: {
+      bodySizeLimit: '50mb',
+    },
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/3d-model/:path*',
+        destination: 'http://localhost:3003/:path*',
+      },
+    ];
   },
 };
 
